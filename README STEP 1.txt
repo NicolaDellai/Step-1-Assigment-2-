@@ -1,5 +1,5 @@
-In lectures 8 and 9, you learn the offering strategy of price-taker renewables. Please consider a
-wind farm with the nominal (installed) capacity of 150 MW. We are interested to formulate and
+In lectures 8 and 9, you learn the offering strategy of price-taker renewables. 
+Please consider a wind farm with the nominal (installed) capacity of 150 MW. We are interested to formulate and
 solve an offering strategy problem for this farm. This problem determines her participation
 strategy in the day-ahead market (in terms of her hourly production quantities). Note that her
 offer price is zero. We consider a time framework of 24 hours. Please also note that we discard
@@ -16,7 +16,7 @@ assume there is no correlation among these three sources of of uncertainty.
 Scenario generation for wind power production forecast: Potential references are as
 following:
 
-Reference 1: You can get wind data from the FINGRID website (Finnish TSO) or the ELIA
+Secnario generation for wind power production: You can get wind data from the FINGRID website (Finnish TSO) or the ELIA
 website (Belgian TSO), and normalize them for a 150-MW wind farm. Although they report
 “aggregate” wind data, you can assume they are data for an individual farm. The wind profile
 during a day can be seen as a scenario. For example, wind profile on March 1 can be seen as
