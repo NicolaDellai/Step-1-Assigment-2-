@@ -30,7 +30,7 @@ PI = [1/S for i=1:S]
             + abs((f_SB[h,s]-1)) * ( (1.2 * f_DA[h,s] * w_up_def[h,s]) - (1.2 * f_DA[h,s] * w_dw_def[h,s]) ) #active when the system has power deficit
             ) 
             for s=1:S) for h=1:H)
-)
+            )
 
 #Constraints
 @constraint(S1_OnePrice, [h=1:H], 0 <= w_da[h] <= W_Cap) #capacity constraint for the wind farm
