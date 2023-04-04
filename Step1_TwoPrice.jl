@@ -1,5 +1,6 @@
 using JuMP
 using Gurobi
+using Plots
 
 include("Data1.jl")
 
@@ -37,25 +38,26 @@ PI = [1/S for i=1:S]
 
 #not necessary for the model but used for the outputs
 @constraint(S1_TwoPrice, [s=1:S],  sum(((f_DA1[h,s] * w_da[h]) 
-                                    + f_SB1[h,s] * ( + (0.9 * f_DA1[h,s] * w_up[h,s]) - ( f_DA1[h,s] * w_dw[h,s]) ) 
+                                    + f_SB1[h,s] * ( (0.9 * f_DA1[h,s] * w_up[h,s]) - ( f_DA1[h,s] * w_dw[h,s]) ) 
                                     + abs((f_SB1[h,s]-1)) * ( ( f_DA1[h,s] * w_up[h,s]) - (1.2 * f_DA1[h,s] * w_dw[h,s]) ) #active when the system has power deficit  
                                     for h=1:H)) == EP[s])
 #Solve
 Solution = optimize!(S1_TwoPrice)
 
 
-println("Profit under the Two Price scheme: $(round.(objective_value(S1_TwoPrice)))\$")
+println("Expected Profit under the Two Price scheme: $(round.(objective_value(S1_TwoPrice)))€")
 
 
 #Outputs
-W_DA = value.(w_da[:])
-W_IM = value.(w_im[:,:])
-W_UP = value.(w_up[:,:])
-W_DW = value.(w_dw[:,:])
+W_DA2 = value.(w_da[:])
+W_IM2 = value.(w_im[:,:])
+W_UP2 = value.(w_up[:,:])
+W_DW2 = value.(w_dw[:,:])
+
 
 println("Hourly Wind Power Production Scheduled in the Day-Ahead Market:")
 for h=1:H
-    println("$(h-1)-$(h): $(round.(W_DA[h], digits = 2))MW")
+    println("$(h-1)-$(h): $(round.(W_DA2[h], digits = 2))MW")
 end
 println("")
 println("")
@@ -70,6 +72,20 @@ for s=1:S
     println("Senario $s:")
     println("F_WP\tDA_WP\tIMB")
     for h=1:H
-    println("$(round(f_WP1[h,s]))\t$(round(W_DA[h]))\t$(round(W_IM[h,s]))")
+    println("$(round(f_WP1[h,s]))\t$(round(W_DA2[h]))\t$(round(W_IM2[h,s]))")
     end
 end
+
+
+plot(0:23, 0.005*sum(W_IM1[:,s] for s=1:200), label="One Price")
+plot!(0:23, 0.005(sum(W_IM2[:,s] for s=1:200)), label="Two Price")
+xlabel!("Time [h]")
+xaxis!([0,3,6,9,12,15,18,21,23])
+ylabel!("Real Time Wind Imbalance [MW]")
+
+
+plot(1:24, W_DA1, label="One Price")
+plot!(1:24, W_DA2, label="Two Price")
+xlabel!("Time [h]")
+xaxis!([0,3,6,9,12,15,18,21,23])
+ylabel!("Wind Power [MW]")

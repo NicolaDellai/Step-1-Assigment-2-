@@ -27,7 +27,7 @@ PI = [1/S for s=1:S]
 @objective(S1_OnePrice, Max, 
             sum( sum(PI[s]
             * ((f_DA1[h,s] * w_da[h]) 
-            + f_SB1[h,s] * ( + (0.9 * f_DA1[h,s] * w_up[h,s]) - (0.9 * f_DA1[h,s] * w_dw[h,s]) ) #active when the system has power excess
+            + f_SB1[h,s] * ( (0.9 * f_DA1[h,s] * w_up[h,s]) - (0.9 * f_DA1[h,s] * w_dw[h,s]) ) #active when the system has power excess
             + abs((f_SB1[h,s]-1)) * ( (1.2 * f_DA1[h,s] * w_up[h,s]) - (1.2 * f_DA1[h,s] * w_dw[h,s]) ) #active when the system has power deficit
             ) 
             for s=1:S) for h=1:H)
@@ -40,28 +40,27 @@ PI = [1/S for s=1:S]
 
 #not necessary for the model but used for the outputs
 @constraint(S1_OnePrice, [s=1:S],  sum(((f_DA1[h,s] * w_da[h]) 
-                                    + f_SB1[h,s] * ( + (0.9 * f_DA1[h,s] * w_up[h,s]) - (0.9 * f_DA1[h,s] * w_dw[h,s]) ) 
+                                    + f_SB1[h,s] * ( (0.9 * f_DA1[h,s] * w_up[h,s]) - (0.9 * f_DA1[h,s] * w_dw[h,s]) ) 
                                     + abs((f_SB1[h,s]-1)) * ( (1.2 * f_DA1[h,s] * w_up[h,s]) - (1.2 * f_DA1[h,s] * w_dw[h,s]) )   
                                     for h=1:H)) == EP[s])
 
                                         #Solve
 Solution = optimize!(S1_OnePrice)
-println(Solution)
 
-println("Expected Profit under the One Price scheme: $(println(sum(value.(EP[s])*PI[s] for s=1:S)))\$")
+println("Expected Profit under the Two Price scheme: $(round.(objective_value(S1_OnePrice)))€")
 
-plot(1:200, value.(EP).*PI)
+#plot(1:200, value.(EP).*PI)
 
 
 #Outputs
-W_DA = value.(w_da[:])
-W_IM = value.(w_im[:,:])
-W_UP = value.(w_up[:,:])
-W_DW = value.(w_dw[:,:])
+W_DA1 = value.(w_da[:])
+W_IM1 = value.(w_im[:,:])
+W_UP1 = value.(w_up[:,:])
+W_DW1 = value.(w_dw[:,:])
 
 println("Hourly Wind Power Production Scheduled in the Day-Ahead Market:")
 for h=1:H
-    println("$(h-1)-$(h): $(round.(W_DA[h], digits = 2))MW")
+    println("$(h-1)-$(h): $(round.(W_DA1[h], digits = 2))MW")
 end
 println("")
 println("")
@@ -76,7 +75,7 @@ for s=1:S
     println("Senario $s:")
     println("F_WP\tDA_WP\tIMB")
     for h=1:H
-    println("$(round(f_WP1[h,s]))\t$(round(W_DA[h]))\t$(round(W_IM[h,s]))")
+    println("$(round(f_WP1[h,s]))\t$(round(W_DA1[h]))\t$(round(W_IM1[h,s]))")
     end
 end
 

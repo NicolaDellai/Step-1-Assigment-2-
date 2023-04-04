@@ -29,7 +29,7 @@ A = 0.9 #Confidence level (alpha)
 @objective(S14_OnePrice, Max, 
             sum( sum(PI[s]
             * ((f_DA1[h,s] * w_da[h]) 
-            + f_SB1[h,s] * ( + (0.9 * f_DA1[h,s] * w_up[h,s]) - (0.9 * f_DA1[h,s] * w_dw[h,s]) ) #active when the system has power excess
+            + f_SB1[h,s] * ( (0.9 * f_DA1[h,s] * w_up[h,s]) - (0.9 * f_DA1[h,s] * w_dw[h,s]) ) #active when the system has power excess
             + abs((f_SB1[h,s]-1)) * ( (1.2 * f_DA1[h,s] * w_up[h,s]) - (1.2 * f_DA1[h,s] * w_dw[h,s]) ) #active when the system has power deficit
             ) 
             for s=1:S) for h=1:H)
@@ -46,7 +46,7 @@ A = 0.9 #Confidence level (alpha)
 
 #not necessary for the model but used for the outputs
 @constraint(S14_OnePrice, [s=1:S],  sum(((f_DA1[h,s] * w_da[h]) 
-                                    + f_SB1[h,s] * ( + (0.9 * f_DA1[h,s] * w_up[h,s]) - (0.9 * f_DA1[h,s] * w_dw[h,s]) ) 
+                                    + f_SB1[h,s] * ( (0.9 * f_DA1[h,s] * w_up[h,s]) - (0.9 * f_DA1[h,s] * w_dw[h,s]) ) 
                                     + abs((f_SB1[h,s]-1)) * ( (1.2 * f_DA1[h,s] * w_up[h,s]) - (1.2 * f_DA1[h,s] * w_dw[h,s]) ) #active when the system has power deficit  
                                     for h=1:H)) == EP[s])
 
