@@ -90,9 +90,9 @@ f_WP1 = zeros(H,length(S1))
 f_DA1 = zeros(H,length(S1))
 f_SB1 = zeros(H,length(S1))
 for s=1:200
-    f_WP1[1:H,s] = SC_d[S1[s]].WP
-    f_DA1[1:H,s] = SC_d[S1[s]].PR
-    f_SB1[1:H,s] = SC_d[S1[s]].IM
+    f_WP1[1:H,s] = SC_d[S1[s]].WP #forecasted wind production for the 200 scenarios
+    f_DA1[1:H,s] = SC_d[S1[s]].PR #forecasted day-ahead prices for the 200 scenarios
+    f_SB1[1:H,s] = SC_d[S1[s]].IM #forecasted system balance for the 200 scenarios
 end
 
 #scenarios for step 1.5 and 1.6
@@ -102,9 +102,9 @@ f_WP2 = zeros(H,length(S2))
 f_DA2 = zeros(H,length(S2))
 f_SB2 = zeros(H,length(S2))
 for s=1:400
-    f_WP2[1:H,s] = SC_d[S2[s]].WP
-    f_DA2[1:H,s] = SC_d[S2[s]].PR
-    f_SB2[1:H,s] = SC_d[S2[s]].IM
+    f_WP2[1:H,s] = SC_d[S2[s]].WP #forecasted wind production for the other 400 scenarios
+    f_DA2[1:H,s] = SC_d[S2[s]].PR #forecasted day-ahead prices for the other 400 scenarios
+    f_SB2[1:H,s] = SC_d[S2[s]].IM #forecasted system balance for the other 400 scenarios
 end
 
 

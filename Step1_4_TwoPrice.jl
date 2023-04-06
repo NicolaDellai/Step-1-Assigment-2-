@@ -11,7 +11,7 @@ S14_TwoPrice = Model(Gurobi.Optimizer)
 S = 200
 PI = [1/S for i=1:S]
 
-B = 1 #risk adversity (beta)
+B = 10 #risk adversity (beta)
 A = 0.9 #Confidence level (alpha)
 
 #Variables
@@ -24,6 +24,7 @@ A = 0.9 #Confidence level (alpha)
 @variable(S14_TwoPrice, VAR) #value at risk
 
 @variable(S14_TwoPrice, EP[s=1:S]) #expected profit
+@variable(S14_TwoPrice, CV)
 
 
 #Objective function One Price Scheme
@@ -50,23 +51,27 @@ A = 0.9 #Confidence level (alpha)
                                     + f_SB1[h,s] * ( (0.9 * f_DA1[h,s] * w_up[h,s]) - ( f_DA1[h,s] * w_dw[h,s]) ) 
                                     + abs((f_SB1[h,s]-1)) * ( ( f_DA1[h,s] * w_up[h,s]) - (1.2 * f_DA1[h,s] * w_dw[h,s]) ) #active when the system has power deficit  
                                     for h=1:H)) == EP[s])
+@constraint(S14_TwoPrice, CV == VAR - 1/(1-A)*sum(PI[s]*n[s] for s=1:S))
 
 #Solve
 Solution = optimize!(S14_TwoPrice)
 
 println("Risk adversity: $B")
-println("Expected Profit under the One Price scheme: $(round(sum(value.(EP[s])*PI[s] for s=1:S)))€")
-CVaR = value.(VAR - 1/(1-A) * sum(PI[s] * n[s] for s=1:S))
-println("CVaR: $(round(CVaR))€")
-println("Value at Risk: $(round(value.(VAR)))€")
+println("Expected Profit under the One Price scheme: $(round(sum(value.(EP[s])*PI[s] for s=1:S)))")
+CVaR=round(value.(CV))
+println("Risk adversity: $B")
+println("CVaR: $(round(CVaR))")
+println("Value at Risk: $(round(value.(VAR)))")
+
+
+#Outputs
+W_DA24 = value.(w_da[:])
+W_IM24 = value.(w_im[:,:])
+W_UP24 = value.(w_up[:,:])
+W_DW24 = value.(w_dw[:,:])
+ExpPr24 = value.(EP[:])
 
 #=
-#Outputs
-W_DA = value.(w_da[:])
-W_IM = value.(w_im[:,:])
-W_UP = value.(w_up[:,:])
-W_DW = value.(w_dw[:,:])
-
 println("Hourly Wind Power Production Scheduled in the Day-Ahead Market:")
 for h=1:H
     println("$(h-1)-$(h): $(round.(W_DA[h], digits = 2))MW")

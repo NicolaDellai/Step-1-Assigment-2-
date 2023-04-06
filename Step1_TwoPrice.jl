@@ -1,6 +1,5 @@
 using JuMP
 using Gurobi
-using Plots
 
 include("Data1.jl")
 
@@ -53,7 +52,7 @@ W_DA2 = value.(w_da[:])
 W_IM2 = value.(w_im[:,:])
 W_UP2 = value.(w_up[:,:])
 W_DW2 = value.(w_dw[:,:])
-
+ExpPr2 = value.(EP[:])
 
 println("Hourly Wind Power Production Scheduled in the Day-Ahead Market:")
 for h=1:H
@@ -77,15 +76,4 @@ for s=1:S
 end
 
 
-plot(0:23, 0.005*sum(W_IM1[:,s] for s=1:200), label="One Price")
-plot!(0:23, 0.005(sum(W_IM2[:,s] for s=1:200)), label="Two Price")
-xlabel!("Time [h]")
-xaxis!([0,3,6,9,12,15,18,21,23])
-ylabel!("Real Time Wind Imbalance [MW]")
 
-
-plot(1:24, W_DA1, label="One Price")
-plot!(1:24, W_DA2, label="Two Price")
-xlabel!("Time [h]")
-xaxis!([0,3,6,9,12,15,18,21,23])
-ylabel!("Wind Power [MW]")

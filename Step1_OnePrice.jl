@@ -44,12 +44,11 @@ PI = [1/S for s=1:S]
                                     + abs((f_SB1[h,s]-1)) * ( (1.2 * f_DA1[h,s] * w_up[h,s]) - (1.2 * f_DA1[h,s] * w_dw[h,s]) )   
                                     for h=1:H)) == EP[s])
 
-                                        #Solve
+#Solve
 Solution = optimize!(S1_OnePrice)
 
 println("Expected Profit under the Two Price scheme: $(round.(objective_value(S1_OnePrice)))€")
 
-#plot(1:200, value.(EP).*PI)
 
 
 #Outputs
@@ -57,6 +56,7 @@ W_DA1 = value.(w_da[:])
 W_IM1 = value.(w_im[:,:])
 W_UP1 = value.(w_up[:,:])
 W_DW1 = value.(w_dw[:,:])
+ExpPr1 = value.(EP[:])
 
 println("Hourly Wind Power Production Scheduled in the Day-Ahead Market:")
 for h=1:H

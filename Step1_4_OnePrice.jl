@@ -11,7 +11,7 @@ S14_OnePrice = Model(Gurobi.Optimizer)
 S = 200
 PI = [1/S for s=1:S]
 
-B = 1 #risk adversity (beta)
+B = 2.2  #risk adversity (beta)
 A = 0.9 #Confidence level (alpha)
 
 #Variables
@@ -24,6 +24,7 @@ A = 0.9 #Confidence level (alpha)
 @variable(S14_OnePrice, VAR) #value at risk
 
 @variable(S14_OnePrice, EP[s=1:S]) #expected profit
+@variable(S14_OnePrice, CV)
 
 #Objective function One Price Scheme
 @objective(S14_OnePrice, Max, 
@@ -49,27 +50,28 @@ A = 0.9 #Confidence level (alpha)
                                     + f_SB1[h,s] * ( (0.9 * f_DA1[h,s] * w_up[h,s]) - (0.9 * f_DA1[h,s] * w_dw[h,s]) ) 
                                     + abs((f_SB1[h,s]-1)) * ( (1.2 * f_DA1[h,s] * w_up[h,s]) - (1.2 * f_DA1[h,s] * w_dw[h,s]) ) #active when the system has power deficit  
                                     for h=1:H)) == EP[s])
+@constraint(S14_OnePrice, CV == VAR - 1/(1-A)*sum(PI[s]*n[s] for s=1:S))
+
 
 #Solve
 Solution = optimize!(S14_OnePrice)
-println(Solution)
-
+println("Expected Profit under the One Price scheme: $(round(sum(value.(EP[s])*PI[s] for s=1:S)))")
+CVaR=round(value.(CV))
 println("Risk adversity: $B")
-println("Expected Profit under the One Price scheme: $(round(sum(value.(EP[s])*PI[s] for s=1:S)))€")
-CVaR = value.(VAR - 1/(1-A) * sum(PI[s] * n[s] for s=1:S))
-println("CVaR: $(round(CVaR))€")
-println("Value at Risk: $(round(value.(VAR)))€")
+println("CVaR: $(round(CVaR))")
+println("Value at Risk: $(round(value.(VAR)))")
 
 
 
+
+#Outputs
+W_DA14 = value.(w_da[:])
+W_IM14 = value.(w_im[:,:])
+W_UP14 = value.(w_up[:,:])
+W_DW14 = value.(w_dw[:,:])
+ExpPr14 = value.(EP[:])
 
 #=
-#Outputs
-W_DA = value.(w_da[:])
-W_IM = value.(w_im[:,:])
-W_UP = value.(w_up[:,:])
-W_DW = value.(w_dw[:,:])
-
 println("Hourly Wind Power Production Scheduled in the Day-Ahead Market:")
 for h=1:H
     println("$(h-1)-$(h): $(round.(W_DA[h], digits = 2))MW")
@@ -90,5 +92,14 @@ for s=1:S
     println("$(round(f_WP1[h,s]))\t$(round(W_DA[h]))\t$(round(W_IM[h,s]))")
     end
 end
+
+=#
+
+#=
+STORE DATA TO PLOT:
+Risk adversity: 1
+Expected Profit under the One Price scheme: 353252.0€
+CVaR: 80274.0€
+Value at Risk: 99614.0€
 
 =#
