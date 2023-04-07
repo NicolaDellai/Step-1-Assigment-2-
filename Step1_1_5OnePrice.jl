@@ -46,7 +46,7 @@ variance = var(profits)
 standard_deviation = std(profits)
 # Calculate probabilities for each interval
 probabilities_by_interval = pdf.(Normal(expected_value, standard_deviation), profit_range) * interval_width
-plot(profit_range, probabilities_by_interval,label="In Sample")
+plot(profit_range, probabilities_by_interval,label="In Sample",dpi=800)
 
 #Determine number of intervals using the Freedman-Diaconis rule
 nbins_out = Int64(ceil(length(profits_out)^(1/3) * (maximum(profits_out) - minimum(profits_out)) / (2 * iqr(profits_out))))
@@ -62,7 +62,7 @@ standard_deviation_out = std(profits_out)
 # Calculate probabilities for each interval
 probabilities_by_interval_out = pdf.(Normal(expected_value_out, standard_deviation_out), profit_range_out) * interval_width_out
 # Plot histogram of probabilities
-plot!(profit_range_out, probabilities_by_interval_out, xlabel="Profit", ylabel="Probability", label="Out of Sample")
-#savefig("Results/1_1_5_OnePrice.png")
+plot!(profit_range_out, probabilities_by_interval_out, xlabel="Expected Profit [€]", ylabel="Probability", label="Out of Sample",dpi=800)
+savefig("Results/1_1_5_OnePrice.png")
 
 

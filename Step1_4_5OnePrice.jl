@@ -62,7 +62,7 @@ standard_deviation_out = std(profits_out)
 # Calculate probabilities for each interval
 probabilities_by_interval_out = pdf.(Normal(expected_value_out, standard_deviation_out), profit_range_out) * interval_width_out
 # Plot histogram of probabilities
-plot!(profit_range_out, probabilities_by_interval_out, xlabel="Profit", ylabel="Probability", label="Out of Sample")
-#savefig("Results/1_1_5_OnePrice.png")
+plot!(profit_range_out, probabilities_by_interval_out, xlabel="Expected Profit [€]", ylabel="Probability", label="Out of Sample",dpi=800)
+savefig("Results/1_4_5_OnePrice.png")
 
 
