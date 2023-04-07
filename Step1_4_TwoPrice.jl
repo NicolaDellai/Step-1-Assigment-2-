@@ -11,7 +11,7 @@ S14_TwoPrice = Model(Gurobi.Optimizer)
 S = 200
 PI = [1/S for i=1:S]
 
-B = 10 #risk adversity (beta)
+B = 0.1 #risk adversity (beta)
 A = 0.9 #Confidence level (alpha)
 
 #Variables
@@ -65,12 +65,13 @@ println("Value at Risk: $(round(value.(VAR)))")
 
 
 #Outputs
+#=
 W_DA24 = value.(w_da[:])
 W_IM24 = value.(w_im[:,:])
 W_UP24 = value.(w_up[:,:])
 W_DW24 = value.(w_dw[:,:])
 ExpPr24 = value.(EP[:])
-
+=#
 #=
 println("Hourly Wind Power Production Scheduled in the Day-Ahead Market:")
 for h=1:H

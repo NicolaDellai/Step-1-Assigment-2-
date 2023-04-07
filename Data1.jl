@@ -24,7 +24,6 @@ Generate a series of 24 random binary (two-state) variables, e.g., using a berno
 in every hour of the next day, whether the system in the balancing stage will have a deficit in power supply or an excess
 0 = DEFICIT
 1 = EXCESS
-
 prob_deficit = 0.5
 system_balance = zeros(Int, 24, 3)
 for i in 1:3

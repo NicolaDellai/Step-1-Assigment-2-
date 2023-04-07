@@ -11,7 +11,7 @@ S14_OnePrice = Model(Gurobi.Optimizer)
 S = 200
 PI = [1/S for s=1:S]
 
-B = 2.2  #risk adversity (beta)
+B = 0.8  #risk adversity (beta)
 A = 0.9 #Confidence level (alpha)
 
 #Variables
@@ -56,7 +56,7 @@ A = 0.9 #Confidence level (alpha)
 #Solve
 Solution = optimize!(S14_OnePrice)
 println("Expected Profit under the One Price scheme: $(round(sum(value.(EP[s])*PI[s] for s=1:S)))")
-CVaR=round(value.(CV))
+CVaR=value.(CV)
 println("Risk adversity: $B")
 println("CVaR: $(round(CVaR))")
 println("Value at Risk: $(round(value.(VAR)))")
@@ -65,11 +65,13 @@ println("Value at Risk: $(round(value.(VAR)))")
 
 
 #Outputs
+#=
 W_DA14 = value.(w_da[:])
 W_IM14 = value.(w_im[:,:])
 W_UP14 = value.(w_up[:,:])
 W_DW14 = value.(w_dw[:,:])
 ExpPr14 = value.(EP[:])
+=#
 
 #=
 println("Hourly Wind Power Production Scheduled in the Day-Ahead Market:")
@@ -95,11 +97,3 @@ end
 
 =#
 
-#=
-STORE DATA TO PLOT:
-Risk adversity: 1
-Expected Profit under the One Price scheme: 353252.0€
-CVaR: 80274.0€
-Value at Risk: 99614.0€
-
-=#
