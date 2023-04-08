@@ -40,14 +40,14 @@ PI = [1/S for s=1:S]
 
 #not necessary for the model but used for the outputs
 @constraint(S1_OnePrice, [s=1:S],  sum(((f_DA1[h,s] * w_da[h]) 
-                                    + f_SB1[h,s] * ( (0.9 * f_DA1[h,s] * w_up[h,s]) - (0.9 * f_DA1[h,s] * w_dw[h,s]) ) 
-                                    + abs((f_SB1[h,s]-1)) * ( (1.2 * f_DA1[h,s] * w_up[h,s]) - (1.2 * f_DA1[h,s] * w_dw[h,s]) )   
+                                    + f_SB1[h,s] * ( (0.95 * f_DA1[h,s] * w_up[h,s]) - (0.95 * f_DA1[h,s] * w_dw[h,s]) ) 
+                                    + abs((f_SB1[h,s]-1)) * ( (1.1 * f_DA1[h,s] * w_up[h,s]) - (1.1 * f_DA1[h,s] * w_dw[h,s]) )   
                                     for h=1:H)) == EP[s])
 
 #Solve
 Solution = optimize!(S1_OnePrice)
 
-println("Expected Profit under the Two Price scheme: $(round.(objective_value(S1_OnePrice)))€")
+#println("Expected Profit under the Two Price scheme: $(round.(objective_value(S1_OnePrice)))€")
 
 
 
@@ -57,7 +57,9 @@ W_IM1 = value.(w_im[:,:])
 W_UP1 = value.(w_up[:,:])
 W_DW1 = value.(w_dw[:,:])
 ExpPr1 = value.(EP[:])
+println("Expected Profit under the One Price scheme: $(round(Int,sum(value.(EP[s])*PI[s] for s=1:S)))€")
 
+#=
 println("Hourly Wind Power Production Scheduled in the Day-Ahead Market:")
 for h=1:H
     println("$(h-1)-$(h): $(round.(W_DA1[h], digits = 2))MW")
@@ -80,3 +82,4 @@ for s=1:S
 end
 
 
+=#
